@@ -4,29 +4,34 @@ import Util(notImplementedYet)
 
 -- Реализуйте левую свёртку
 myFoldl :: (b -> a -> b) -> b -> [a] -> b
-myFoldl = notImplementedYet
+myFoldl f init [] = init
+myFoldl f init (x:xs) = myFoldl f (f init x) xs
 
 -- Реализуйте правую свёртку
 myFoldr :: (a -> b -> b) -> b -> [a] -> b
-myFoldr = notImplementedYet
+myFoldr f init [] = init
+myFoldr f init (x:xs) = f x (myFoldr f init xs)
 
 -- Используя реализации свёрток выше, реализуйте все остальные функции в данном файле
 
 myMap :: (a -> b) -> [a] -> [b]
-myMap f = notImplementedYet
+myMap f [] = []
+myMap f lst = myFoldl (\acc -> \x -> acc ++ [f x]) [] lst
 
 myConcatMap :: (a -> [b]) -> [a] -> [b]
-myConcatMap f = notImplementedYet
+myConcatMap f [] = []
+myConcatMap f lst = myFoldl (\acc -> \x -> acc <> f x) [] lst
 
 myConcat :: [[a]] -> [a]
-myConcat = notImplementedYet
+myConcat [] = []
+myConcat lst = myFoldl (\acc -> \elem -> acc <> elem) [] lst
 
 myReverse :: [a] -> [a]
-myReverse = notImplementedYet
+myReverse [] = []
+myReverse lst = myFoldl (\acc -> \elem -> [elem] ++ acc) [] lst
 
 myFilter :: (a -> Bool) -> [a] -> [a]
-myFilter p = notImplementedYet
+myFilter p lst = myFoldl (\acc -> \elem -> if (p elem) then acc ++ [elem] else acc) [] lst
 
 myPartition :: (a -> Bool) -> [a] -> ([a], [a])
-myPartition p = notImplementedYet
-
+myPartition p lst = myFoldl (\(acc1, acc2) -> \elem -> if (p elem) then (acc1 ++ [elem], acc2) else (acc1, acc2 ++ [elem])) ([], []) lst
